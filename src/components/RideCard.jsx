@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Card from "@mui/material/Card";
+import { styled } from "@mui/material/styles";
 import {
   Box,
   Button,
@@ -7,72 +8,45 @@ import {
   Grid,
   Grid2,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 const RideCard = () => {
-  const [submit,setSubmit]=useState('Search');
+  const [driver, setDriver] = useState(false);
   const [focus, setFocused] = useState(false);
   const [focusTime, setFocusedTime] = useState(false);
   const onFocus = () => setFocused(true);
   const onBlur = () => setFocused(false);
   const onFocusTime = () => setFocusedTime(true);
   const onBlurTime = () => setFocusedTime(false);
-  const getRideClick=()=>setSubmit('Search');
-  const addRideClick=()=>setSubmit('Add');
+  const MyToggleButton = styled(ToggleButton)({
+    "&.Mui-selected, &.Mui-selected:hover": {
+      color: "white",
+      backgroundColor: '#00049E'
+    }
+  });
 
   return (
     <>
-      <Grid2 container padding={5} >
+      <Grid2 container padding={5}>
         <Grid2 size={12}>
-          <Card
-            sx={{
-              height:'55%',
-              borderRadius: "15px",
-              background: "#000000",
-            }}
+          <ToggleButtonGroup fullWidth
+            color="primary"
+            value={driver.toString()}
+            exclusive
+            onChange={()=>{setDriver(!driver)}}
+            aria-label="Platform"
+            sx={{paddingBottom:'1.85rem'}}
+            // onFocus={handleFocus}
           >
-            <CardContent
-              fullWidth
-              sx={{
-                height:'60%',
-                display: "flex",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-                
-              }}
-            >
-              <Button
-              onClick={getRideClick}
-                variant="text"
-                sx={{ color: "#FFFFFF", fontSize: "15px", fontWeight: "bold",marginTop:"-10px" }}
-              >
-                Get a Ride
-              </Button>
-              <Typography
-                sx={{
-                 color: 'rgb(255, 255, 255)',
-                //  boxShadow:"3",
-                  fontSize: "40px",
-                  fontFamily: "Roboto",
-                  fontWeight: "light",
-                  // paddingBottom:"0.7rem"
-                  marginTop:"-20px"
-                }}
-              >
-                |
-              </Typography>
-              <Button
-              onClick={addRideClick}
-                variant="text"
-                sx={{ color: "#FFFFFF", fontSize: "15px", fontWeight: "bold",marginTop:"-10px" }}
-              >
-                Add a Ride
-              </Button>
-            </CardContent>
-          </Card>
+            <MyToggleButton id value='true'sx={{background:'grey',color:'white',borderRadius:'1rem'}} >Find Ride</MyToggleButton>
+            <MyToggleButton value='false' sx={{background:'grey',color:'white',borderRadius:'1rem'}}>Add Ride</MyToggleButton>
+          </ToggleButtonGroup>
         </Grid2>
-        <Grid2 >
-          <Card fullWidth
+        <Grid2>
+          <Card
+            fullWidth
             sx={{
               // display: "flex",
               // position: "absolute",
@@ -91,7 +65,11 @@ const RideCard = () => {
             <CardContent
               sx={{ paddingTop: "2.5rem", paddingLeft: "2rem", flexGrow: 1 }}
             >
-              <Grid2 container spacing={4} sx={{justifyContent:"center",alignItems:"center"}}>
+              <Grid2
+                container
+                spacing={4}
+                sx={{ justifyContent: "center", alignItems: "center" }}
+              >
                 <Grid2 size={12}>
                   <TextField
                     fullWidth
@@ -135,8 +113,9 @@ const RideCard = () => {
                     }}
                   />
                 </Grid2>
-                <Grid2 size={{ sm: 6, sx: 12 }}>
+                <Grid2 size={{ sm: 6, xs: 12 }}>
                   <TextField
+                    fullWidth
                     onFocus={onFocus}
                     onBlur={onBlur}
                     id="date-input"
@@ -156,8 +135,9 @@ const RideCard = () => {
                     }}
                   />
                 </Grid2>
-                <Grid2 size={{ sm: 6, sx: 12 }}>
+                <Grid2 size={{ sm: 6, xs: 12 }}>
                   <TextField
+                    fullWidth
                     id="time-input"
                     label=" 🕗  Now"
                     variant="filled"
@@ -181,7 +161,7 @@ const RideCard = () => {
                   <Button
                     fullWidth
                     sx={{
-                      bgcolor: "#000000",
+                      background: '#00049E',
                       variant: "contained",
                       color: "#FFFFFF",
 
@@ -192,7 +172,7 @@ const RideCard = () => {
                       // marginLeft: "7.8rem",
                     }}
                   >
-                    {submit}
+                    {driver?"Find":"Add"}
                   </Button>
                 </Grid2>
               </Grid2>
