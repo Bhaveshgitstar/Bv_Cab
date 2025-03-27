@@ -43,7 +43,7 @@ function MapCard() {
     console.log(cord);
     const mbMap = new maplibregl.Map({
       center: [cord.lon, cord.lat],
-      zoom: 9,
+      zoom: 13,
       container: "map",
     });
 
