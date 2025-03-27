@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import NavBar from "../../components/NavBar";
 import RideCard from "../../components/RideCard";
 import HomeGrid from "../../components/HomeGrid";
-const Home = () => {
+const HomePage = () => {
   return (
     <>
       <NavBar></NavBar>
@@ -11,4 +11,4 @@ const Home = () => {
     </>
   );
 };
-export default Home;
+export default HomePage;
