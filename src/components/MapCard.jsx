@@ -6,6 +6,7 @@ import { CardMedia, Grid2 } from "@mui/material";
 import { useEffect } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import "./index.css";
 
 function MapCard() {
   const [cord, setCord] = useState({ lat: 0, lon: 0 });
@@ -41,7 +42,7 @@ function MapCard() {
 
   useEffect(() => {
     console.log(cord);
-    const mbMap = new maplibregl.Map({
+    const map = new maplibregl.Map({
       center: [cord.lon, cord.lat],
       zoom: 13,
       container: "map",
@@ -50,7 +51,26 @@ function MapCard() {
     var style =
       "https://maps.geoapify.com/v1/styles/osm-bright/style.json?apiKey=440b5a17c9744781ac1d712090b0dcdf";
     console.log(style);
-    mbMap.setStyle(style);
+    map.setStyle(style);
+
+    map.addControl(new maplibregl.NavigationControl());
+      var airportIcon = document.createElement("div");
+      airportIcon.classList.add("airport");
+
+      var airportPopup = new maplibregl.Popup({
+        anchor: "bottom",
+        offset: [0, -64], // height - shadow
+      }).setText("Zürich Airport");
+
+      var airport = new maplibregl.Marker(airportIcon, {
+        anchor: "bottom",
+        offset: [0, 6],
+      })
+        .setLngLat([cord.lon,cord.lat])
+        .setPopup(airportPopup)
+        .addTo(map);
+
+      console.log(airport);
   }, [cord]);
 
   return (
