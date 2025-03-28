@@ -64,7 +64,7 @@ function MapCard() {
 
       var airport = new maplibregl.Marker(airportIcon, {
         anchor: "bottom",
-        offset: [0, 6],
+        offset: [0, 0],
       })
         .setLngLat([cord.lon,cord.lat])
         .setPopup(airportPopup)
