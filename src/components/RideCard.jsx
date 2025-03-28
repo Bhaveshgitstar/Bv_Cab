@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
@@ -14,12 +14,15 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
+import { PositionContext } from "../store/PositionContext";
 const RideCard = (props) => {
   const [addressList, setAddressList] = useState([]);
   const [address, setAddress] = useState("Noida");
   const [driver, setDriver] = useState(false);
   const [focus, setFocused] = useState(false);
   const [focusTime, setFocusedTime] = useState(false);
+
+  const {startPos,destPos,startSet,destSet}=useContext(PositionContext);
 
   useEffect(() => {
     const fetch = async () => {
@@ -30,11 +33,7 @@ const RideCard = (props) => {
     if (address != "") {
       fetch();
     }
-    // console.log(address)
-    // return () => {
-    //   setAddress("");
-    //   setAddressList([]);
-    // };
+    
   }, [address]);
 
   const onFocus = () => setFocused(true);
@@ -84,15 +83,7 @@ const RideCard = (props) => {
           <Card
             fullWidth
             sx={{
-              // display: "flex",
-              // position: "absolute",
-              // width: "33.44rem",
-              // // alignItems:'center',
-              // height: "25.94rem",
-              // left: "4.61%",
-              // right: "53.59%",
-              // top: "28%",
-              //   bottom: "5.13%",
+              
               borderRadius: "1.5rem",
               background: "rgb(231, 231, 231)",
               opacity: "0.63",
@@ -110,24 +101,27 @@ const RideCard = (props) => {
                   <Autocomplete
                     id="free-solo-demo"
                     freeSolo
+                    getOptionLabel={(opt) => opt.text}
                     options={addressList.map(
-                      (option) =>
-                        option.address_Line1 + " " + option.address_Line2
+                      (option) => ({ text: 
+                        option.address_Line1 + " " + option.address_Line2, id: option })
                     )}
+                    onChange={(evt, value) => {
+                        startSet({lat:value.id.lat,lon:value.id.lon});
+                        // console.log(startPos);
+                    }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         fullWidth
-                        // onBlur={props.setStrtPt({lat:address.lat,lon:address.lon})}
                         id="start-input"
                         label="⚫  Starting Point"
                         onBlur={()=>{
                           setAddress("");
                           setAddressList([]);
                         }}
-                        onInput={(e) => {
+                        onChange={(e) => {
                           setAddress(e.target.value);
-                          // console.log(addressList);
                         }}
                         variant="filled"
                         
@@ -150,36 +144,20 @@ const RideCard = (props) => {
                       />
                     )}
                   />
-                  {/* <TextField
-                    fullWidth
-                    id="start-input"
-                    label="⚫  Starting Point"
-                    variant="filled"
-                    sx={{
-                      borderRadius: "15px",
-                      background: "rgb(215, 215, 215)",
-                      color: "rgb(103, 102, 89)",
-                      fontFamily: "Roboto",
-                      fontSize: "20px",
-                      fontWeight: "300",
-                      lineHeight: "23px",
-                      letterSpacing: "0px",
-                      textAlign: "left",
-                      "& .MuiInputLabel-root": {
-                        color: "black", // Change label color
-                        fontWeight: "bold",
-                      },
-                    }}
-                  /> */}
                 </Grid2>
                 <Grid2 size={12}>
                   <Autocomplete
                     id="free-solo-demo"
                     freeSolo
+                    getOptionLabel={(opt) => opt.text}
                     options={addressList.map(
-                      (option) =>
-                        option.address_Line1 + " " + option.address_Line2
+                      (option) => ({ text: 
+                        option.address_Line1 + " " + option.address_Line2, id: option })
                     )}
+                    onChange={(evt, value) => {
+                        destSet({lat:value.id.lat,lon:value.id.lon});
+                        // console.log(destPos);
+                    }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -190,7 +168,7 @@ const RideCard = (props) => {
                           setAddress("");
                           setAddressList([]);
                         }}
-                        onChange={(e) => {
+                        onInput={(e) => {
                           setAddress(e.target.value);
                           // console.log(addressList)
                         }}
@@ -213,24 +191,7 @@ const RideCard = (props) => {
                       />
                     )}
                   />
-                  {/* <TextField
-                  //   fullWidth
-                  //   id="destination-input"
-                  //   label=" ◼️  Destination"
-                  //   variant="filled"
-                  //   sx={{
-                  //     // height: "59px",
-                  //     borderRadius: "15px",
-                  //     background: "rgb(215, 215, 215)",
-                  //     color: "rgb(103, 102, 89)",
-                  //     fontFamily: "Roboto",
-                  //     fontSize: "20px",
-                  //     "& .MuiInputLabel-root": {
-                  //       color: "black", // Change label color
-                  //       fontWeight: "bold",
-                  //     },
-                  //   }}
-                  // /> */}
+                  
                 </Grid2>
                 <Grid2 size={{ sm: 6, xs: 12 }}>
                   <TextField

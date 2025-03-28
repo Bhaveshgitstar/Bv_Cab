@@ -7,16 +7,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useState } from "react";
 import HomeGrid from "./HomeGrid";
 const loginOptions = ["Login", "Register"];
+import { Link, Navigate, NavLink, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+  const navigate=useNavigate();
   const [isProfilePressed, setIsProfilePressed] = useState(false);
 
   const handleProfileClick = () => {
@@ -36,7 +36,7 @@ const NavBar = () => {
             alt="Your logo."
             src={"bv_logo.png"}
           />
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1 }} onClick={()=>navigate('/')}>
             <Typography variant="h6" noWrap component="div" sx={{}}>
               BUREAU VERITAS
             </Typography>
@@ -117,7 +117,7 @@ const NavBar = () => {
             onMouseDown={handleProfileClick}
           >
             {loginOptions.map((login) => (
-              <MenuItem key={login}>
+           <MenuItem key={login} onClick={()=>navigate(`/${login.toLowerCase()}`)} >
                 <Typography sx={{ minWidth: "200px", verticalAlign: "middle" }}>
                   {login} 
                 </Typography>

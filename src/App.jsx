@@ -1,17 +1,24 @@
-import Home from "./pages/home/HomePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import HomePage from "./pages/homePage/HomePage";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import NavBar from "./components/NavBar";
+import Layout from "./pages/layout/Layout";
+import { PositionProvider } from "./store/PositionContext";
 function App() {
   return (
     <>
-      <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<Register/>}/>
-      </Routes>
-      </BrowserRouter>
+      <PositionProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </PositionProvider>
     </>
   );
   return <></>;
