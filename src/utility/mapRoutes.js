@@ -583,9 +583,9 @@ function drawRoute(map, instructionsData, routeData) {
   }
 }
 
-const mapRoutes = (startingPointCord, endingPointCord, routeData) => {
+const mapRoutes = (cord, startingPointCord, endingPointCord, routeData) => {
   const map = new maplibregl.Map({
-    center: [startingPointCord.lon,startingPointCord.lat],
+    center: [startingPointCord.lon, startingPointCord.lat],
     zoom: 13,
     container: "map",
   });
@@ -596,6 +596,14 @@ const mapRoutes = (startingPointCord, endingPointCord, routeData) => {
   map.setStyle(style);
 
   map.addControl(new maplibregl.NavigationControl());
+
+  var userLocationMarker = document.createElement("div");
+  userLocationMarker.className = "currentLocation";
+  userLocationMarker.style.backgroundImage = `url(../../public/current.png)`;
+
+  var userLocation = new maplibregl.Marker({ element: userLocationMarker })
+    .setLngLat([cord.lon, cord.lat])
+    .addTo(map);
 
   var startingPointIcon = document.createElement("div");
   startingPointIcon.classList.add("airport");

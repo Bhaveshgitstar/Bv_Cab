@@ -35,6 +35,7 @@ const NavBar = () => {
             }}
             alt="Your logo."
             src={"bv_logo.png"}
+            onClick={()=>navigate('/')}
           />
           <Box sx={{ flexGrow: 1 }} onClick={()=>navigate('/')}>
             <Typography variant="h6" noWrap component="div" sx={{}}>

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
+import { setStartLocation, setDestLocation } from "../store/locationSlice";
 import axios from "axios";
 import {
   Box,
@@ -15,25 +16,42 @@ import {
   Typography,
 } from "@mui/material";
 import { PositionContext } from "../store/PositionContext";
-const RideCard = (props) => {
+import { useDispatch } from "react-redux";
+const RideCard = () => {
   const [addressList, setAddressList] = useState([]);
   const [address, setAddress] = useState("Noida");
   const [driver, setDriver] = useState(false);
   const [focus, setFocused] = useState(false);
   const [focusTime, setFocusedTime] = useState(false);
+  const dispatch = useDispatch();
 
-  const {startPos,destPos,startSet,destSet}=useContext(PositionContext);
+  const { startSet, destSet } = useContext(PositionContext);
 
   useEffect(() => {
+    let ignore = false;
+    let controller = new AbortController();
     const fetch = async () => {
-      var data = await axios.get("https://bvcabserver-1-0.onrender.com/api/Search/" + address);
-      console.log(data.data);
-      setAddressList(data.data);
+      try {
+        var data = await axios.get(
+          "https://bvcabserver-1-0.onrender.com/api/Search/" + address,
+          {
+            signal: controller.signal,
+          }
+        );
+        console.log(data.data.results);
+        console.log(data.data.length);
+        if (data.data.length != 0 && !ignore) {
+          console.log("setRun");
+          setAddressList(data.data);
+          controller = null;
+        }
+      } catch (err) {}
     };
-    if (address != "") {
-      fetch();
-    }
-    
+    fetch();
+    return () => {
+      ignore = true;
+      controller?.abort();
+    };
   }, [address]);
 
   const onFocus = () => setFocused(true);
@@ -46,7 +64,6 @@ const RideCard = (props) => {
       backgroundColor: "#00049E",
     },
   });
-
 
   return (
     <>
@@ -83,7 +100,6 @@ const RideCard = (props) => {
           <Card
             fullWidth
             sx={{
-              
               borderRadius: "1.5rem",
               background: "rgb(231, 231, 231)",
               opacity: "0.63",
@@ -102,13 +118,24 @@ const RideCard = (props) => {
                     id="free-solo-demo"
                     freeSolo
                     getOptionLabel={(opt) => opt.text}
-                    options={addressList.map(
-                      (option) => ({ text: 
-                        option.address_Line1 + " " + option.address_Line2, id: option })
-                    )}
+                    options={
+                      addressList.length > 0
+                        ? addressList.map((option) => ({
+                            text:
+                              option.address_Line1 + " " + option.address_Line2,
+                            id: option,
+                          }))
+                        : []
+                    }
                     onChange={(evt, value) => {
-                        startSet({lat:value.id.lat,lon:value.id.lon});
-                        // console.log(startPos);
+                      // startSet({lat:value.id.lat,lon:value.id.lon});
+                      dispatch(
+                        setStartLocation({
+                          lat: value.id.lat,
+                          lon: value.id.lon,
+                        })
+                      );
+                      // console.log(startPos);
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -116,7 +143,7 @@ const RideCard = (props) => {
                         fullWidth
                         id="start-input"
                         label="⚫  Starting Point"
-                        onBlur={()=>{
+                        onBlur={() => {
                           setAddress("");
                           setAddressList([]);
                         }}
@@ -124,10 +151,9 @@ const RideCard = (props) => {
                           setAddress(e.target.value);
                         }}
                         variant="filled"
-                        
                         sx={{
                           borderRadius: "15px",
-                          boxShadow:"none !important",
+                          boxShadow: "none !important",
                           background: "rgb(215, 215, 215)",
                           color: "rgb(103, 102, 89)",
                           fontFamily: "Roboto",
@@ -150,13 +176,23 @@ const RideCard = (props) => {
                     id="free-solo-demo"
                     freeSolo
                     getOptionLabel={(opt) => opt.text}
-                    options={addressList.map(
-                      (option) => ({ text: 
-                        option.address_Line1 + " " + option.address_Line2, id: option })
-                    )}
+                    options={
+                      addressList.length > 0
+                        ? addressList.map((option) => ({
+                            text:
+                              option.address_Line1 + " " + option.address_Line2,
+                            id: option,
+                          }))
+                        : []
+                    }
                     onChange={(evt, value) => {
-                        destSet({lat:value.id.lat,lon:value.id.lon});
-                        // console.log(destPos);
+                      dispatch(
+                        setDestLocation({
+                          lat: value.id.lat,
+                          lon: value.id.lon,
+                        })
+                      );
+                      // console.log(destPos);
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -164,7 +200,7 @@ const RideCard = (props) => {
                         fullWidth
                         id="destination-input"
                         label=" ◼️  Destination"
-                        onBlur={()=>{
+                        onBlur={() => {
                           setAddress("");
                           setAddressList([]);
                         }}
@@ -191,7 +227,6 @@ const RideCard = (props) => {
                       />
                     )}
                   />
-                  
                 </Grid2>
                 <Grid2 size={{ sm: 6, xs: 12 }}>
                   <TextField

@@ -5,9 +5,12 @@ import Register from "./pages/register/Register";
 import NavBar from "./components/NavBar";
 import Layout from "./pages/layout/Layout";
 import { PositionProvider } from "./store/PositionContext";
+import {Provider} from "react-redux";
+import { reduxStore } from "./store/reduxStore";
 function App() {
   return (
     <>
+    <Provider store={reduxStore}>
       <PositionProvider>
         <BrowserRouter>
           <Routes>
@@ -19,6 +22,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </PositionProvider>
+      </Provider>
     </>
   );
   return <></>;

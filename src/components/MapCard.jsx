@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { use, useContext, useState } from "react";
 import Card from "@mui/material/Card";
 import ZoomOutRoundedIcon from "@mui/icons-material/ZoomOutRounded";
 import ZoomInRoundedIcon from "@mui/icons-material/ZoomInRounded";
@@ -10,10 +10,15 @@ import "./index.css";
 import mapRoutes from "../utility/mapRoutes";
 import { PositionContext } from "../store/PositionContext";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 function MapCard() {
   const [cord, setCord] = useState({ lat: 0, lon: 0 });
-  const { startPos, destPos } = useContext(PositionContext);
+  // const { startPos, destPos } = useContext(PositionContext);
+  const startPoint = useSelector((state) => state.location.start);
+  const destPoint = useSelector((state) => state.location.dest);
+
   const getLocation = () => {
     if (navigator.geolocation) {
       return navigator.geolocation.getCurrentPosition(success, error, option);
@@ -45,8 +50,9 @@ function MapCard() {
   }, [cord]);
 
   useEffect(() => {
+    console.log(startPoint);
     const map = new maplibregl.Map({
-      center: [77.3269885, 28.5705657],
+      center: [cord.lon, cord.lat],
       zoom: 12,
       container: "map",
     });
@@ -58,12 +64,20 @@ function MapCard() {
 
     map.addControl(new maplibregl.NavigationControl());
 
+    var userLocationMarker = document.createElement("div");
+    userLocationMarker.className = "currentLocation";
+    userLocationMarker.style.backgroundImage = `url(../../public/current.png)`;
+
+    var userLocation = new maplibregl.Marker({ element: userLocationMarker })
+      .setLngLat([cord.lon, cord.lat])
+      .addTo(map);
+
     const fetch = async () => {
       var jsData = {
-        Origin_Lat: startPos.lat,
-        Origin_Lon: startPos.lon,
-        Destination_Lat: destPos.lat,
-        Destination_Lon: destPos.lon,
+        Origin_Lat: startPoint.lat,
+        Origin_Lon: startPoint.lon,
+        Destination_Lat: destPoint.lat,
+        Destination_Lon: destPoint.lon,
       };
       var data = await axios.post(
         "https://bvcabserver-1-0.onrender.com/api/route/",
@@ -71,17 +85,17 @@ function MapCard() {
       );
       console.log(data.data);
 
-      mapRoutes(startPos, destPos, data.data);
+      mapRoutes(cord,startPoint, destPoint, data.data);
     };
     if (
-      startPos.lon != 0 &&
-      startPos.lat != 0 &&
-      destPos.lon != 0 &&
-      destPos.lat != 0
+      startPoint.lon != 0 &&
+      startPoint.lat != 0 &&
+      destPoint.lon != 0 &&
+      destPoint.lat != 0
     ) {
       fetch();
     }
-  }, [startPos, destPos]);
+  }, [cord, startPoint, destPoint]);
 
   return (
     <>
