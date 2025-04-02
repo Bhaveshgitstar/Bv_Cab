@@ -68,7 +68,10 @@ function MapCard() {
     userLocationMarker.className = "currentLocation";
     userLocationMarker.style.backgroundImage = `url(current.png)`;
 
-    var userLocation = new maplibregl.Marker({ element: userLocationMarker })
+    var userLocation = new maplibregl.Marker({
+      element: userLocationMarker,
+      draggable: true,
+    })
       .setLngLat([cord.lon, cord.lat])
       .addTo(map);
 
@@ -85,7 +88,7 @@ function MapCard() {
       );
       console.log(data.data);
 
-      mapRoutes(cord,startPoint, destPoint, data.data);
+      mapRoutes(cord, startPoint, destPoint, data.data);
     };
     if (
       startPoint.lon != 0 &&

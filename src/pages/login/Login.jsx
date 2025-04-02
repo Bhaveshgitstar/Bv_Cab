@@ -118,7 +118,9 @@ const Login = () => {
                       // marginLeft: "7.8rem",
                     }}
                     onClick={() => {
-                      navigate("/register");
+                      window.open(
+                        "https://www.google.com/maps/dir/43.7967876,-79.5331616/43.1941283,-79.59179/43.7991083,-79.5339667/43.8387033,-79.3453417/43.836424,-79.3024487/43.5184049,-79.8473993/@43.4930981,-79.9511464,10.5z/data=!4m13!4m12!1m0!1m0!1m0!1m0!1m5!3m4!1m2!1d-80.192687!2d43.5031809!3s0x882b849f571d938f:0x6f42fb7922c52ae8!1m0!3e0!11m1!6b1?entry=ttu&g_ep=EgoyMDI1MDMzMC4wIKXMDSoASAFQAw%3D%3D"
+                      );
                     }}
                   >
                     {"Login"}
