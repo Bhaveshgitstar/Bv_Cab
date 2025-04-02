@@ -66,7 +66,7 @@ function MapCard() {
 
     var userLocationMarker = document.createElement("div");
     userLocationMarker.className = "currentLocation";
-    userLocationMarker.style.backgroundImage = `url(../../public/current.png)`;
+    userLocationMarker.style.backgroundImage = `url(current.png)`;
 
     var userLocation = new maplibregl.Marker({ element: userLocationMarker })
       .setLngLat([cord.lon, cord.lat])
